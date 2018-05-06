@@ -26,37 +26,104 @@ namespace MyUnitOfWorkDAL.Repository
 
         public void Add(TEntity entity)
         {
-            throw new NotImplementedException();
+            if(entity == null)
+            {
+                throw new ArgumentNullException("entity", "entity is required to perform an add");
+
+            }
+
+            try
+            {
+                dbSet.Add(entity);
+            }
+            catch
+            { throw; }
         }
 
         public void Attach(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity", "entity is required to perform an add");
+
+            }
+
+            try
+            {
+                dbSet.Attach(entity);
+            }
+            catch
+            { throw; }
         }
 
         public void Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity", "entity is required to perform an add");
+
+            }
+
+            try
+            {
+                if(dbContext.Entry(entity).State == EntityState.Detached)
+                {
+                    dbSet.Attach(entity);
+                }
+                dbSet.Remove(entity);
+            }
+            catch
+            { throw; }
         }
 
         public IQueryable<TEntity> FindAll(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
-        }
+            if (predicate == null)
+            {
+                throw new ArgumentNullException("predicate", "predicate null");
+            }
+
+            try { 
+            IQueryable<TEntity> result = dbSet.Where(predicate);
+                return result;
+                }
+            catch { throw; }
+         }
 
         public TEntity FindSingle(System.Linq.Expressions.Expression<Func<TEntity, bool>> predicate)
         {
-            throw new NotImplementedException();
-        }
+            if (predicate == null)
+            {
+                throw new ArgumentNullException("predicate", "predicate null");
+            }
+
+            try
+            {
+                return FindAll(predicate).SingleOrDefault();
+            }
+            catch { throw; }
+            }
 
         public IQueryable<TEntity> GetAll()
         {
-            throw new NotImplementedException();
+            return this.dbSet;
         }
 
         public TEntity GetByID(object id)
         {
-            throw new NotImplementedException();
+            return this.dbSet.Find(id);
+        }
+
+        public void Update(TEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity", "entity is required to perform an add");
+
+            }
+
+            dbSet.Attach(entity);
+            dbContext.Entry(entity).State = EntityState.Modified;
         }
     }
 }

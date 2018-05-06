@@ -14,6 +14,7 @@ namespace MyUnitOfWorkDAL.Repository
         void Add(TEntity entity);
         void Attach(TEntity entity);
         void Delete(TEntity entity);
+        void Update(TEntity entity);
 
         IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate);
         TEntity FindSingle(Expression<Func<TEntity, bool>> predicate);
